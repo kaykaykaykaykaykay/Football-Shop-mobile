@@ -1,16 +1,11 @@
-# football_shop
+A widget tree in Flutter represents the structure of how widgets are arranged in the user interface. Each widget can contain other widgets, forming a hierarchy of parent and child relationships. The parent widget controls the layout and behavior for its children, while the children adapt their appearance based on what the parent provides. This hierarchical relationship allows Flutter to efficiently rebuild only specific parts of the UI when changes occur, rather than redrawing everything.
 
-A new Flutter project.
+In this project, several widgets were used. MaterialApp is used to initialize the app with Material Design settings. Scaffold provides the basic page structure including the AppBar and body. AppBar displays the top navigation bar with the title. Column and Row are layout widgets used to arrange elements vertically and horizontally. Padding adds spacing around certain widgets. GridView displays multiple items in a grid layout. Card is used to show information in a boxed format. Text displays text on the screen. Icon displays icons. InkWell detects taps on interactive elements. Snackbar is used to show short messages when buttons are pressed.
 
-## Getting Started
+The MaterialApp widget serves as the main wrapper for the application and sets up important configurations such as the app theme, navigation, and overall user interface design behavior. It is often used as the root widget because it provides access to essential features like routing, theming, and localization which are typically needed throughout the application.
 
-This project is a starting point for a Flutter application.
+A StatelessWidget is a widget whose appearance does not change once it is built. It is used when the content displayed on the screen remains the same. A StatefulWidget, on the other hand, is able to change its appearance when its state is updated, usually through the setState() method. StatefulWidget is chosen when the interface needs to update dynamically, such as when responding to user input or real-time data changes.
 
-A few resources to get you started if this is your first Flutter project:
+BuildContext is an object that provides information about where a widget is located within the widget tree. It allows widgets to access theme settings, screen size, and navigation. It is important because it connects the widget to the rest of the UI structure. Inside the build method, BuildContext is used to locate and interact with other widgets and inherited data higher in the widget tree.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Hot reload is a feature in Flutter that lets developers immediately apply code changes while keeping the current app state. This makes development faster because running the app from scratch is not required. Hot restart, however, completely rebuilds the app and resets all state back to the initial configuration. Hot reload keeps what you are currently doing, while hot restart returns everything to the start.
