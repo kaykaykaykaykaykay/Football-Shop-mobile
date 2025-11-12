@@ -1,17 +1,30 @@
 import 'package:flutter/material.dart';
-class MyHomePage extends StatelessWidget {
-    MyHomePage({super.key});
-    final String name = "Khayru Rafa Kartajaya";
-    final String npm = "2406365263";
-    final String Studentclass = "KKI";
+// ADDED: import your Add Product form page (adjust the path if you placed it elsewhere)
+import 'add_product_form.dart';
+import 'package:football_shop/models/product.dart';
 
-    final List<ItemHomepage> items = [
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key});
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  final String name = "Khayru Rafa Kartajaya";
+  final String npm = "2406365263";
+  final String Studentclass = "KKI";
+
+  final List<ItemHomepage> items = [
     ItemHomepage("All Products", Icons.shopping_bag, Colors.blue),
     ItemHomepage("My Products", Icons.inventory, Colors.green),
-    ItemHomepage("Create Product", Icons.add, Colors.red),];
+    ItemHomepage("Create Product", Icons.add, Colors.red),
+  ];
 
-    @override
-    Widget build(BuildContext context) {
+  final List<Product> _products = [];
+
+  @override
+  Widget build(BuildContext context) {
     // Scaffold menyediakan struktur dasar halaman dengan AppBar dan body.
     return Scaffold(
       // AppBar adalah bagian atas halaman yang menampilkan judul.
@@ -27,158 +40,183 @@ class MyHomePage extends StatelessWidget {
         // Warna latar belakang AppBar diambil dari skema warna tema aplikasi.
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
-      // Body halaman dengan padding di sekelilingnya.
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        // Menyusun widget secara vertikal dalam sebuah kolom.
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+
+      // ADDED: Drawer untuk navigasi Home & Add Product (mengikuti tutorial)
+      drawer: Drawer(
+        child: ListView(
           children: [
-            // Row untuk menampilkan 3 InfoCard secara horizontal.
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                InfoCard(title: 'NPM', content: npm),
-                InfoCard(title: 'Name', content: name),
-                InfoCard(title: 'Class', content: Studentclass),
-              ],
-            ),
-
-            // Memberikan jarak vertikal 16 unit.
-            const SizedBox(height: 16.0),
-
-            // Menempatkan widget berikutnya di tengah halaman.
-            Center(
+            DrawerHeader(
+              decoration: BoxDecoration(color: Colors.blue),
               child: Column(
-                // Menyusun teks dan grid item secara vertikal.
-
                 children: [
-                  // Menampilkan teks sambutan dengan gaya tebal dan ukuran 18.
-                  const Padding(
-                    padding: EdgeInsets.only(top: 16.0),
-                    child: Text(
-                      'Selamat datang di Football News',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18.0,
-                      ),
+                  Text(
+                    'Football News',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
                   ),
-
-                  // Grid untuk menampilkan ItemCard dalam bentuk grid 3 kolom.
-                  GridView.count(
-                    primary: true,
-                    padding: const EdgeInsets.all(20),
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                    crossAxisCount: 3,
-                    // Agar grid menyesuaikan tinggi kontennya.
-                    shrinkWrap: true,
-
-                    // Menampilkan ItemCard untuk setiap item dalam list items.
-                    children: items.map((ItemHomepage item) {
-                      return ItemCard(item);
-                    }).toList(),
+                  Padding(padding: EdgeInsets.all(10)),
+                  Text(
+                    "All the latest football updates here!",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.white,
+                      fontWeight: FontWeight.normal,
+                    ),
                   ),
                 ],
               ),
             ),
+            ListTile(
+              leading: const Icon(Icons.home_outlined),
+              title: const Text('Home'),
+              // Redirect to MyHomePage menggunakan pushReplacement (sesuai tutorial)
+              onTap: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const MyHomePage(),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.post_add),
+              title: const Text('Add Product'),
+              // Redirect ke halaman form Add Product
+              onTap: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const AddProductFormPage(),
+                  ),
+                );
+              },
+            ),
           ],
         ),
       ),
-    );
-}}
 
-class ItemCard extends StatelessWidget {
-  // Menampilkan kartu dengan ikon dan nama.
-
-  final ItemHomepage item; 
-  
-  const ItemCard(this.item, {super.key}); 
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      // Gunakan warna spesifik per tombol.
-      color: item.color,
-      // Membuat sudut kartu melengkung.
-      borderRadius: BorderRadius.circular(12),
-      
-      child: InkWell(
-        // Aksi ketika kartu ditekan.
-        onTap: () {
-          // Tentukan pesan sesuai tombolnya.
-          String message;
-          if (item.name == "All Products") {
-            message = "You have pressed the All Products button";
-          } else if (item.name == "My Products") {
-            message = "You have pressed the My Products button";
-          } else if (item.name == "Create Product") {
-            message = "You have pressed the Create Product button";
-          } else {
-            message = "Kamu telah menekan tombol ${item.name}!";
-          }
-
-          // Menampilkan pesan SnackBar saat kartu ditekan.
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(SnackBar(content: Text(message)));
-        },
-        // Container untuk menyimpan Icon dan Text
-        child: Container(
-          padding: const EdgeInsets.all(8),
-          child: Center(
-            child: Column(
-              // Menyusun ikon dan teks di tengah kartu.
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  item.icon,
-                  color: Colors.white,
-                  size: 30.0,
-                ),
-                const Padding(padding: EdgeInsets.all(3)),
-                Text(
-                  item.name,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(color: Colors.white),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-  
-}
-
-class InfoCard extends StatelessWidget {
-  // Kartu informasi yang menampilkan title dan content.
-
-  final String title;  // Judul kartu.
-  final String content;  // Isi kartu.
-
-  const InfoCard({super.key, required this.title, required this.content});
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      // Membuat kotak kartu dengan bayangan dibawahnya.
-      elevation: 2.0,
-      child: Container(
-        // Mengatur ukuran dan jarak di dalam kartu.
-        width: MediaQuery.of(context).size.width / 3.5, // menyesuaikan dengan lebar device yang digunakan.
+      // Body halaman dengan padding di sekelilingnya.
+      body: Padding(
         padding: const EdgeInsets.all(16.0),
-        // Menyusun title dan content secara vertikal.
         child: Column(
+          // Kolom untuk menampilkan kartu data diri dan grid tombol fitur.
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              title,
-              style: const TextStyle(fontWeight: FontWeight.bold),
+            // Kartu informasi pengguna
+            Card(
+              elevation: 2,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("Name: $name", style: const TextStyle(fontSize: 16)),
+                    Text("NPM: $npm", style: const TextStyle(fontSize: 16)),
+                    Text("Class: $Studentclass", style: const TextStyle(fontSize: 16)),
+                  ],
+                ),
+              ),
             ),
-            const SizedBox(height: 8.0),
-            Text(content),
+            const SizedBox(height: 12),
+
+            // Grid tombol fitur (All Products, My Products, Create Product)
+            Expanded(
+              child: Column(
+                children: [
+                  // actions grid
+                  SizedBox(
+                    height: 240,
+                    child: GridView.count(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 12,
+                      mainAxisSpacing: 12,
+                      children: items
+                          .map((item) => ItemCard(
+                                item: item,
+                                onTap: () async {
+                                  // handle create product action
+                                  if (item.name == "Create Product") {
+                                    final result = await Navigator.push<Product?>(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => const AddProductFormPage(),
+                                      ),
+                                    );
+                                    if (result != null) {
+                                      setState(() {
+                                        _products.add(result);
+                                      });
+                                    }
+                                  } else {
+                                    ScaffoldMessenger.of(context)
+                                      ..hideCurrentSnackBar()
+                                      ..showSnackBar(SnackBar(content: Text("You pressed the ${item.name} button!")));
+                                  }
+                                },
+                              ))
+                          .toList(),
+                    ),
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  // products grid
+                  if (_products.isNotEmpty)
+                    Expanded(
+                      child: GridView.builder(
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          childAspectRatio: 0.8,
+                          crossAxisSpacing: 12,
+                          mainAxisSpacing: 12,
+                        ),
+                        itemCount: _products.length,
+                        itemBuilder: (context, idx) {
+                          final p = _products[idx];
+                          return Card(
+                            elevation: 2,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                if (p.thumbnail.isNotEmpty)
+                                  Expanded(
+                                    child: SizedBox(
+                                      width: double.infinity,
+                                      child: Image.network(
+                                        p.thumbnail,
+                                        fit: BoxFit.cover,
+                                        errorBuilder: (ctx, err, st) => const Center(child: Icon(Icons.broken_image)),
+                                      ),
+                                    ),
+                                  ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(p.name, style: const TextStyle(fontWeight: FontWeight.bold)),
+                                      const SizedBox(height: 4),
+                                      Text('Price: ${p.price}'),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    )
+                  else
+                    const SizedBox.shrink(),
+                ],
+              ),
+            ),
           ],
         ),
       ),
@@ -192,4 +230,38 @@ class ItemHomepage {
   final Color color;
 
   ItemHomepage(this.name, this.icon, this.color);
+}
+
+class ItemCard extends StatelessWidget {
+  const ItemCard({super.key, required this.item, this.onTap});
+
+  final ItemHomepage item;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: item.color.withOpacity(0.1),
+      borderRadius: BorderRadius.circular(12),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(item.icon, size: 40),
+              const SizedBox(height: 12),
+              Text(
+                item.name,
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }
