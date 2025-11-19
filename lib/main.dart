@@ -1,4 +1,4 @@
-import 'package:football_shop/menu.dart' as menu;
+import 'package:football_shop/screens/menu.dart' as menu;
 import 'package:flutter/material.dart';
 
 void main() {
